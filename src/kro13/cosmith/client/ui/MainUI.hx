@@ -16,6 +16,8 @@ import react.ReactMacro.jsx;
 
 class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 {
+	private static inline var MESSENGER_UI_WIDTH_PERCENT:Int = 50;
+
 	private static var defaultProps:MainUIProps =
 		{
 			btnHideText: ">",
@@ -50,8 +52,8 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 		uiRoot = cast document.getElementById("uiRoot");
 		if (state.messengerVisible)
 		{
-			contentRoot.style.width = "50%";
-			uiRoot.style.width = "50%";
+			contentRoot.style.width = '${100 - MESSENGER_UI_WIDTH_PERCENT}%';
+			uiRoot.style.width = '${MESSENGER_UI_WIDTH_PERCENT}%';
 		} else
 		{
 			contentRoot.style.width = "100%";

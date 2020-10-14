@@ -39,11 +39,9 @@ class MessengerUI extends ReactComponentOfPropsAndState<MessengerUIProps, Messen
 			jsx('<$MessageUI key={messageKeys++} isMine={Messenger.instance.isMine(msg)} text={msg.text}/>'));
 
 		return jsx('
-		<div className="py-3 pl-3 h-100 w-100 bg-dark d-flex flex-column">
-			<div className="h-100 w-100 pb-3">
-				<div id="chatbox" className="col-lg-12 overflow-auto h-100 w-100 bg-white rounded">
-					{msgItems}
-				</div>
+		<div className="py-3 pl-3 h-100 w-100 bg-dark d-flex flex-column"><!--flex-column to resize content properly-->
+			<div id="chatbox" className="mb-3 pb-3 overflow-auto h-100 w-100 flex-column bg-white rounded">
+				{msgItems}
 			</div>
 			<div className="input-group">
 				<textarea placeholder={props.inputPlaceholder} value={state.inputMessage} onChange=$onInput className="form-control" style={{resize: "none"}}></textarea>

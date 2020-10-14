@@ -30,8 +30,8 @@ class MessageUI extends ReactComponentOfProps<MessageUIProps>
 	private function renderMine():ReactElement
 	{
 		return jsx('
-		<div className="row pt-3 px-3 justify-content-end">
-			<div className="col-auto p-3 bg-secondary rounded text-white text text-justify text-left text-break">
+		<div className="pt-3 px-3 d-flex justify-content-end">
+			<div className="p-3 d-inline-flex bg-secondary rounded text-white text text-justify text-left text-break">
 				{props.text}
 			</div>	
 		</div>
@@ -41,8 +41,8 @@ class MessageUI extends ReactComponentOfProps<MessageUIProps>
 	private function renderNotMine():ReactElement
 	{
 		return jsx('
-		<div className="row pt-3 px-3">
-			<div className="col-auto p-3 bg-light rounded text-sectondary text text-justify text-left text-break">
+		<div className="pt-3 px-3 d-flex">
+			<div className="p-3 d-inline-flex bg-light rounded text-sectondary text text-justify text-left text-break">
 				{props.text}
 			</div>	
 		</div>
