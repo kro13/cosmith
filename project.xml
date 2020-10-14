@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Cosmith" package="kro13.cosmith" version="1.0.0" company="Kro13"/>
+	<app main="kro13.cosmith.Main" path="bin/client" file="cosmith"/>
+	<window width="0" height="0" resizable="true" fps="60" background="#acacac"/>
+	
+	<source path="src"/>
+
+	<haxelib name="lime"/>
+	<haxelib name="openfl"/>
+	<haxelib name="hxsocketio"/>
+	<haxelib name="msignal"/>
+	<haxelib name="react"/>
+	<haxelib name="hscript"/>
+
+	<assets path="assets/css" rename="css"/>
+	<assets path="assets/images" rename="images"/>
+
+	<section if="html5">
+		<template path="assets/templates/index.html" rename="index.html"/>
+	</section>
+
+</project>

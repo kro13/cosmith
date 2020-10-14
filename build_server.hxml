@@ -1,0 +1,4 @@
+-cp src
+-lib hxsocketio
+-js bin/server/server.js
+-main kro13.cosmith.server.CosmithServer
