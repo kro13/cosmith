@@ -2,10 +2,6 @@ package kro13.cosmith.client.board;
 
 import kro13.cosmith.client.board.data.GameData;
 import kro13.cosmith.client.board.data.types.TGameObject;
-import kro13.cosmith.client.board.gameObjects.GameObject;
-import kro13.cosmith.client.board.utils.MapGrid;
-import kro13.cosmith.client.board.utils.SimpleMapDrag;
-import kro13.cosmith.client.board.utils.SimpleMapZoom;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -34,9 +30,6 @@ class Board extends Sprite implements IUpdatable
 		this.addChild(map);
 		Lib.current.addChild(this);
 		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
-
-		new SimpleMapDrag(map, this).start();
-		new SimpleMapZoom(map, this).start();
 
 		Updater.instance.add(this);
 	}

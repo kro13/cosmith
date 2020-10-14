@@ -23,7 +23,8 @@ class GameObectData
 				x: 0,
 				y: 0,
 				w: 0,
-				h: 0
+				h: 0,
+				name: ""
 			};
 
 		switch (type)
@@ -39,5 +40,6 @@ class GameObectData
 	private function setupPawn(tmpl:TGameObject):Void
 	{
 		tmpl.w = tmpl.h = 5;
+		tmpl.name = 'Pawn${tmpl.id}';
 	}
 }

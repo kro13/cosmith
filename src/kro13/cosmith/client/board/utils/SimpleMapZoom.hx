@@ -2,6 +2,7 @@ package kro13.cosmith.client.board.utils;
 
 import openfl.Lib;
 import openfl.display.Sprite;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 
 class SimpleMapZoom
@@ -14,10 +15,9 @@ class SimpleMapZoom
 	private var container:Sprite;
 	private var mapScale:Float = 1;
 
-	public function new(map:GameMap, container:Sprite)
+	public function new(map:GameMap)
 	{
 		this.map = map;
-		this.container = container;
 	}
 
 	public function reset()
@@ -27,7 +27,13 @@ class SimpleMapZoom
 
 	public function start()
 	{
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		if (map.parent != null)
+		{
+			doStart();
+		} else
+		{
+			map.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+		}
 	}
 
 	private function onMouseWheel(e:MouseEvent):Void
@@ -60,5 +66,16 @@ class SimpleMapZoom
 		targetY = Math.min(0, Math.max(-constraintY, targetY));
 		map.x = targetX;
 		map.y = targetY;
+	}
+
+	private function doStart():Void
+	{
+		container = cast map.parent;
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+	}
+
+	private function onAdded(e:Event):Void
+	{
+		doStart();
 	}
 }

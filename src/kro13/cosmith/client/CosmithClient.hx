@@ -26,6 +26,7 @@ class CosmithClient
 		var pawn:TGameObject = GameData.instance.go.newGameObject(PAWN);
 		pawn.x = 10;
 		pawn.y = 10;
+		pawn.name = "My Pawn";
 		GameData.instance.map.addObject(pawn);
 		GameData.instance.map.printObjects();
 	}

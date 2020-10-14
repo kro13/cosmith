@@ -9,6 +9,7 @@ typedef TGameObject =
 	var y:Int;
 	var w:Int;
 	var h:Int;
+	var name:String;
 }
 
 enum EGameObjectType

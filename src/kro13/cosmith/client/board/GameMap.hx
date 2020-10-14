@@ -1,20 +1,22 @@
 package kro13.cosmith.client.board;
 
 import kro13.cosmith.client.board.data.GameData;
-import kro13.cosmith.client.board.data.scopes.GameObjectData.GameObectData;
 import kro13.cosmith.client.board.data.scopes.MapData;
 import kro13.cosmith.client.board.data.types.TGameObject;
 import kro13.cosmith.client.board.gameObjects.GameObject;
 import kro13.cosmith.client.board.utils.MapGrid;
-import kro13.cosmith.client.messenger.Messenger;
+import kro13.cosmith.client.board.utils.SimpleMapDrag;
+import kro13.cosmith.client.board.utils.SimpleMapZoom;
 import openfl.events.MouseEvent;
 
 class GameMap extends GameObject
 {
-	var grid:MapGrid;
+	private var grid:MapGrid;
 	private var idsToInstances:Map<Int, GameObject>;
 	private var idsToInstancesKeys:Array<Int>;
 	private var selectedGO:GameObject;
+	private var drag:SimpleMapDrag;
+	private var zoom:SimpleMapZoom;
 
 	public function new(data:TGameObject)
 	{
@@ -28,6 +30,10 @@ class GameMap extends GameObject
 	{
 		super.start();
 		addChild(grid);
+		drag = new SimpleMapDrag(this);
+		zoom = new SimpleMapZoom(this);
+		drag.start();
+		zoom.start();
 		addEventListener(MouseEvent.CLICK, onClick);
 	}
 
@@ -91,8 +97,13 @@ class GameMap extends GameObject
 
 	private function onClick(e:MouseEvent):Void
 	{
-		var clickedObj:GameObject = cast e.target;
-		if (clickedObj.isSelectable())
+		trace(drag.isDragging);
+		if (drag.isDragging)
+		{
+			return;
+		}
+		var clickedObj:Dynamic = e.target;
+		if (Std.is(clickedObj, GameObject) && clickedObj.isSelectable())
 		{
 			selectObject(clickedObj);
 		} else if (selectedGO != null)

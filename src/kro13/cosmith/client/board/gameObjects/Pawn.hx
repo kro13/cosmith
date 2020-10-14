@@ -22,16 +22,16 @@ class Pawn extends GameObject
 
 	override private function handleClick():Void
 	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: 'Pawn ${data.id} selected.'});
+		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} selected.'});
 	}
 
 	override private function handleClickOutside():Void
 	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: 'Pawn ${data.id} unselected.'});
+		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} unselected.'});
 	}
 
 	override private function handleMove(x:Int, y:Int):Void
 	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: 'Pawn ${data.id} goes to (${x}, ${y}).'});
+		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} goes to (${x}, ${y}).'});
 	}
 }
