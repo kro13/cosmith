@@ -1,0 +1,15 @@
+.idea
+.vscode
+bin
+hooks
+info
+node_modules
+objects
+refs
+config
+cosmith.iml
+debug.log
+description
+HEAD
+hxformat.json
+/tgitchangelist
