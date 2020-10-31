@@ -1,7 +1,11 @@
 package kro13.cosmith.client.board;
 
-import kro13.cosmith.client.board.data.GameData;
-import kro13.cosmith.client.board.data.types.TGameObject;
+import kro13.cosmith.client.messenger.Messenger;
+import kro13.cosmith.data.GameData;
+import kro13.cosmith.data.GameDataFactory;
+import kro13.cosmith.data.types.ECommand;
+import kro13.cosmith.data.types.TGameObject;
+import kro13.cosmith.data.types.TMessage;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -21,16 +25,13 @@ class Board extends Sprite implements IUpdatable
 
 	public function start():Void
 	{
-		var mapData:TGameObject = GameData.instance.go.newGameObject();
-		mapData.w = 100;
-		mapData.h = 100;
-		mapData.image = MAP_IMG;
+		var mapData:TGameObject = GameData.instance.map.data;
 		map = new GameMap(mapData);
 		map.start();
 		this.addChild(map);
 		Lib.current.addChild(this);
-		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
 
+		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
 		Updater.instance.add(this);
 	}
 

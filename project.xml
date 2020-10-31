@@ -13,6 +13,10 @@
 	<haxelib name="msignal"/>
 	<haxelib name="react"/>
 	<haxelib name="hscript"/>
+	<haxelib name="tink_http"/>
+	<!--server haxelibs-->
+	<haxelib name="tink_web"/>
+	<!--server haxelibs-->
 
 	<assets path="assets/css" rename="css"/>
 	<assets path="assets/images" rename="images"/>

@@ -1,4 +1,7 @@
 -cp src
+-lib tink_http
+-lib tink_web
+-lib hxnodejs
 -lib hxsocketio
 -js bin/server/server.js
 -main kro13.cosmith.server.CosmithServer

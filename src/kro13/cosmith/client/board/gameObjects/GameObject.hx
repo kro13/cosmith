@@ -1,11 +1,11 @@
 package kro13.cosmith.client.board.gameObjects;
 
-import kro13.cosmith.client.board.data.scopes.MapData;
-import kro13.cosmith.client.board.data.types.TGameObject;
+import kro13.cosmith.client.messenger.Messenger;
+import kro13.cosmith.data.scopes.MapData;
+import kro13.cosmith.data.types.TGameObject;
 import openfl.Assets;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
-import openfl.events.MouseEvent;
 
 class GameObject extends Sprite implements IUpdatable
 {
@@ -15,6 +15,8 @@ class GameObject extends Sprite implements IUpdatable
 	public var hTiles(get, null):Int;
 	public var xTiles(get, set):Int;
 	public var yTiles(get, set):Int;
+	public var selectable:Bool = false;
+	public var movable:Bool = false;
 
 	private var data:TGameObject;
 	private var bmpData:Bitmap;
@@ -41,18 +43,43 @@ class GameObject extends Sprite implements IUpdatable
 		positionTiles(data.x, data.y);
 	}
 
-	public function positionTiles(x:Int, y:Int):Void
+	public function setOrigin(byX:Float, byY:Float)
+	{
+		if (bmpData != null)
+		{
+			bmpData.x = bmpData.width * byX;
+			bmpData.y = bmpData.height * byY;
+		}
+	}
+
+	public function handleInteraction(interaction:EGOInteraction):Void
+	{
+		switch (interaction)
+		{
+			case NONE:
+				handleNone();
+			case SELECT:
+				handleSelect();
+			case UNSELECT:
+				handleUnselect();
+			case MOVE(x, y):
+				handleMove(x, y);
+			default:
+		}
+	}
+
+	private function positionTiles(x:Int, y:Int):Void
 	{
 		xTiles = x;
 		yTiles = y;
 	}
 
-	public function resizeTiles(w:Int, h:Int):Void
+	private function resizeTiles(w:Int, h:Int):Void
 	{
 		resize(w * MapData.TILE_SIZE, h * MapData.TILE_SIZE);
 	}
 
-	public function resize(w:Int, h:Int):Void
+	private function resize(w:Int, h:Int):Void
 	{
 		if (this.w == w && this.h == h)
 		{
@@ -69,48 +96,24 @@ class GameObject extends Sprite implements IUpdatable
 		trace('resize ${w} ${h}');
 	}
 
-	public function setOrigin(byX:Float, byY:Float)
+	private function handleNone():Void
 	{
-		if (bmpData != null)
-		{
-			bmpData.x = bmpData.width * byX;
-			bmpData.y = bmpData.height * byY;
-		}
+		Messenger.instance.sendCommand('${data.name} does nothing.');
 	}
 
-	public function isSelectable():Bool
+	private function handleSelect():Void
 	{
-		if (data == null)
-		{
-			return false;
-		}
-		return data.type == EGameObjectType.PAWN;
+		Messenger.instance.sendCommand('${data.name} selected.');
 	}
 
-	public function handleInteraction(interaction:EGOInteraction):Void
+	private function handleUnselect():Void
 	{
-		switch (interaction)
-		{
-			case EGOInteraction.CLICK:
-				handleClick();
-			case EGOInteraction.CLICK_OUTSIDE:
-				handleClickOutside();
-			case EGOInteraction.MOVE(x, y):
-				handleMove(x, y);
-			default:
-		}
+		Messenger.instance.sendCommand('${data.name} unselected.');
 	}
 
-	private function handleClick():Void
+	private function handleMove(x:Int, y:Int):Void
 	{
-	}
-
-	private function handleClickOutside():Void
-	{
-	}
-
-	private function handleMove(x:Int, y:Int)
-	{
+		Messenger.instance.sendCommand('${data.name} moves to (${x}, ${y}).');
 	}
 
 	private function get_wTiles():Int
@@ -148,7 +151,8 @@ class GameObject extends Sprite implements IUpdatable
 
 enum EGOInteraction
 {
-	CLICK;
-	CLICK_OUTSIDE;
+	NONE;
+	SELECT;
+	UNSELECT;
 	MOVE(x:Int, y:Int);
 }

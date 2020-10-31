@@ -1,21 +1,20 @@
 package kro13.cosmith.client.messenger;
 
 import js.node.socketio.Client;
-import kro13.cosmith.types.TMessage;
+import kro13.cosmith.data.types.ECommand;
+import kro13.cosmith.data.types.TMessage;
 import msignal.Signal.Signal1;
 
 class Messenger
 {
-	public static inline var ID_NONE:String = "id_none";
-
 	public static var instance(get, null):Messenger;
 
 	public var onReceive:Signal1<TMessage>;
 
 	private var client:Client;
-	private var userId(default, null):String;
+	private var userId(default, null):String = "no_id";
 
-	private function new()
+	private function new(offline:Bool = false)
 	{
 		onReceive = new Signal1();
 	}
@@ -27,12 +26,18 @@ class Messenger
 		client.on("message", onMessage);
 	}
 
+	public function sendUser(text:String):Void
+	{
+		send({userId: userId, type: USER, text: text});
+	}
+
+	public function sendCommand(text:String, command:ECommand = NONE):Void
+	{
+		send({type: COMMAND(command), text: text});
+	}
+
 	public function send(message:TMessage):Void
 	{
-		if (message.userId == null)
-		{
-			message.userId = userId;
-		}
 		if (client == null) // socket turned off
 		{
 			onMessage(message);
@@ -43,7 +48,7 @@ class Messenger
 
 	public function isMine(message:TMessage):Bool
 	{
-		return message.userId == userId;
+		return message.userId != null && message.userId == userId;
 	}
 
 	private function onId(id:String):Void

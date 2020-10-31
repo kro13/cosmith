@@ -1,8 +1,10 @@
 package kro13.cosmith.client.board;
 
-import kro13.cosmith.client.board.data.types.TGameObject;
 import kro13.cosmith.client.board.gameObjects.GameObject;
+import kro13.cosmith.client.board.gameObjects.Hero;
+import kro13.cosmith.client.board.gameObjects.NPC;
 import kro13.cosmith.client.board.gameObjects.Pawn;
+import kro13.cosmith.data.types.TGameObject;
 
 class GameObjectsFactory
 {
@@ -19,6 +21,11 @@ class GameObjectsFactory
 		{
 			case PAWN:
 				newGO = new Pawn(go);
+			case NPC:
+				newGO = new NPC(go);
+			case HERO:
+				newGO = new Hero(go);
+
 			default:
 				newGO = new GameObject(go);
 		}

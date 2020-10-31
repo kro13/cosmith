@@ -21,7 +21,8 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 	private static var defaultProps:MainUIProps =
 		{
 			btnHideText: ">",
-			btnShowText: "<"
+			btnShowText: "<",
+			btnSpawnText: "+"
 		};
 
 	private var canvas:CanvasElement;
@@ -65,10 +66,17 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 			<div className="h-100 w-100" style={{display:state.messengerVisible ? "block" : "none"}}>
 				<$MessengerUI/>
 			</div>
-			<div className="h-100 bg-dark p-3" style={{pointerEvents:"all"}}>
-				<button type="button" onClick=$onBtnShowHideClick className="btn btn-primary caret-right-fill">
-				{state.messengerVisible ? props.btnHideText : props.btnShowText}
+			<div className="h-100 bg-dark p-3">
+				<div>
+				<button type="button" onClick=$onBtnShowHideClick className="btn btn-primary">
+					{state.messengerVisible ? props.btnHideText : props.btnShowText}
 				</button>
+				</div>
+				<div>
+				<button type="button" onClick=$onBtnSpawnClick className="btn btn-primary mt-3">
+					{props.btnSpawnText}
+				</button>
+				</div>
 			</div>
 		</div>	
 		');
@@ -77,6 +85,12 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 	private function onBtnShowHideClick(e:Event):Void
 	{
 		setState({messengerVisible: !state.messengerVisible});
+	}
+
+	private function onBtnSpawnClick(e:Event):Void
+	{
+		trace("click");
+		Remote.instance.spawnHero();
 	}
 
 	private function onEnterFrame(e:openfl.events.Event):Void
@@ -100,6 +114,7 @@ typedef MainUIProps =
 {
 	var btnShowText:String;
 	var btnHideText:String;
+	var btnSpawnText:String;
 }
 
 typedef MainUIState =

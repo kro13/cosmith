@@ -5,7 +5,7 @@ import js.html.DivElement;
 import js.html.Event;
 import js.html.TextAreaElement;
 import kro13.cosmith.client.messenger.Messenger;
-import kro13.cosmith.types.TMessage;
+import kro13.cosmith.data.types.TMessage;
 import react.ReactComponent.ReactComponentOfPropsAndState;
 import react.ReactComponent.ReactElement;
 import react.ReactMacro.jsx;
@@ -78,7 +78,7 @@ class MessengerUI extends ReactComponentOfPropsAndState<MessengerUIProps, Messen
 	{
 		if (state.inputMessage.length != 0)
 		{
-			Messenger.instance.send({text: state.inputMessage});
+			Messenger.instance.sendUser(state.inputMessage);
 			setState({inputMessage: ""});
 		}
 	}

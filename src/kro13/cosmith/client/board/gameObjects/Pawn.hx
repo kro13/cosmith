@@ -1,13 +1,12 @@
 package kro13.cosmith.client.board.gameObjects;
 
-import kro13.cosmith.client.messenger.Messenger;
-
 class Pawn extends GameObject
 {
 	override public function start():Void
 	{
 		super.start();
 		setOrigin(-0.5, -0.5);
+		selectable = true;
 	}
 
 	override public function update(dt:Float):Void
@@ -18,20 +17,5 @@ class Pawn extends GameObject
 			this.scaleX = 1 / parent.scaleX;
 			this.scaleY = 1 / parent.scaleY;
 		}
-	}
-
-	override private function handleClick():Void
-	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} selected.'});
-	}
-
-	override private function handleClickOutside():Void
-	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} unselected.'});
-	}
-
-	override private function handleMove(x:Int, y:Int):Void
-	{
-		Messenger.instance.send({userId: Messenger.ID_NONE, text: '${data.name} goes to (${x}, ${y}).'});
 	}
 }

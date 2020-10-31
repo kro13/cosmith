@@ -1,6 +1,6 @@
 package kro13.cosmith.client.board.utils;
 
-import kro13.cosmith.client.board.data.scopes.MapData;
+import kro13.cosmith.data.scopes.MapData;
 import openfl.display.Sprite;
 
 class MapGrid extends Sprite
