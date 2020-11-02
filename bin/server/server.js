@@ -1690,7 +1690,6 @@ var kro13_cosmith_server_CosmithServer = function() { };
 kro13_cosmith_server_CosmithServer.__name__ = true;
 kro13_cosmith_server_CosmithServer.main = function() {
 	kro13_cosmith_server_CosmithServer.initData();
-	kro13_cosmith_server_CosmithServer.startMessenger();
 	kro13_cosmith_server_CosmithServer.startRouter();
 };
 kro13_cosmith_server_CosmithServer.initData = function() {
@@ -1754,8 +1753,8 @@ kro13_cosmith_server_Root.prototype = {
 		console.log("src/kro13/cosmith/server/CosmithServer.hx:97:","Spawn hero " + body.name);
 		var hero = kro13_cosmith_data_GameDataFactory.get_instance().newGameObject(kro13_cosmith_server_Storage.goIds++,2);
 		hero.name = body.name;
-		hero.x = Math.round(Math.random() * 100);
-		hero.y = Math.round(Math.random() * 100);
+		hero.x = Math.round(Math.random() * 30);
+		hero.y = Math.round(Math.random() * 30);
 		kro13_cosmith_data_GameData.get_instance().map.addObject(hero);
 		this.socketServer.sockets.emit("message",{ text : "Spawn hero " + hero.name + " at (" + hero.x + " " + hero.y + ")", type : kro13_cosmith_data_types_EMessageType.COMMAND(kro13_cosmith_data_types_ECommand.SPAWN(hero.id,hero.type,hero.x,hero.y,hero.name))});
 		return { status : "OK"};
