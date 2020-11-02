@@ -1,6 +1,7 @@
 package kro13.cosmith.server;
 
 import haxe.Json;
+import js.Node;
 import js.node.socketio.Server;
 import js.node.socketio.Socket;
 import kro13.cosmith.data.GameData;
@@ -57,7 +58,8 @@ class CosmithServer
 
 	private static function startRouter():Void
 	{
-		var container:NodeContainer = new NodeContainer(8080);
+		trace('Start router at port ${Node.process.env.get("$PORT")}');
+		var container:NodeContainer = new NodeContainer(Node.process.env.get("$PORT"));
 		var router = new Router<Root>(new Root(socketServer));
 		container.run((req) ->
 		{

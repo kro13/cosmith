@@ -1708,16 +1708,17 @@ kro13_cosmith_server_CosmithServer.startMessenger = function() {
 	kro13_cosmith_server_CosmithServer.socketServer = new require('socket.io')();
 	kro13_cosmith_server_CosmithServer.socketServer.listen(8070);
 	kro13_cosmith_server_CosmithServer.socketServer.on("connection",function(socket) {
-		console.log("src/kro13/cosmith/server/CosmithServer.hx:48:","user " + socket.id + " connected");
+		console.log("src/kro13/cosmith/server/CosmithServer.hx:49:","user " + socket.id + " connected");
 		kro13_cosmith_server_CosmithServer.socketServer.sockets.to(socket.id).emit("_id",socket.id);
 		socket.on("message",function(message) {
 			kro13_cosmith_server_CosmithServer.socketServer.sockets.emit("message",message);
 		});
 	});
-	console.log("src/kro13/cosmith/server/CosmithServer.hx:55:","Messenger started");
+	console.log("src/kro13/cosmith/server/CosmithServer.hx:56:","Messenger started");
 };
 kro13_cosmith_server_CosmithServer.startRouter = function() {
-	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Port(8080));
+	console.log("src/kro13/cosmith/server/CosmithServer.hx:61:","Start router at port " + process.env["$PORT"]);
+	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Path(process.env["$PORT"]));
 	var router = new tink_web_routing_Router0(new kro13_cosmith_server_Root(kro13_cosmith_server_CosmithServer.socketServer));
 	container.run(new tink_http_SimpleHandler(function(req) {
 		var this1 = router.route(tink_web_routing_Context.ofRequest(req));
@@ -1734,7 +1735,7 @@ kro13_cosmith_server_CosmithServer.startRouter = function() {
 		});
 		return ret.gather();
 	}));
-	console.log("src/kro13/cosmith/server/CosmithServer.hx:66:","Router started");
+	console.log("src/kro13/cosmith/server/CosmithServer.hx:68:","Router started");
 };
 var kro13_cosmith_server_Root = function(socketServer) {
 	this.socketServer = socketServer;
@@ -1746,11 +1747,11 @@ kro13_cosmith_server_Root.prototype = {
 		return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_http_OutgoingResponse.ofString("COSMITH")));
 	}
 	,map: function() {
-		console.log("src/kro13/cosmith/server/CosmithServer.hx:89:","Load map");
+		console.log("src/kro13/cosmith/server/CosmithServer.hx:91:","Load map");
 		return kro13_cosmith_data_GameData.get_instance().map.data;
 	}
 	,spawnHero: function(body) {
-		console.log("src/kro13/cosmith/server/CosmithServer.hx:97:","Spawn hero " + body.name);
+		console.log("src/kro13/cosmith/server/CosmithServer.hx:99:","Spawn hero " + body.name);
 		var hero = kro13_cosmith_data_GameDataFactory.get_instance().newGameObject(kro13_cosmith_server_Storage.goIds++,2);
 		hero.name = body.name;
 		hero.x = Math.round(Math.random() * 30);
@@ -10237,11 +10238,11 @@ tink_web_routing_Router0.prototype = {
 						return tink_core_Promise.ofSpecific(this.map(ctx));
 					} else {
 						var this1 = ctx.request.header.url;
-						return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+						return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 					}
 				} else {
 					var this1 = ctx.request.header.url;
-					return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+					return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 				}
 			} else {
 				return tink_core_Promise.ofSpecific(this.root(ctx));
@@ -10254,20 +10255,20 @@ tink_web_routing_Router0.prototype = {
 						return tink_core_Promise.ofSpecific(this.spawnHero(ctx));
 					} else {
 						var this1 = ctx.request.header.url;
-						return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+						return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 					}
 				} else {
 					var this1 = ctx.request.header.url;
-					return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+					return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 				}
 			} else {
 				var this1 = ctx.request.header.url;
-				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 			}
 			break;
 		default:
 			var this1 = ctx.request.header.url;
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 61, className : "tink.web.routing.Router0", methodName : "route"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 63, className : "tink.web.routing.Router0", methodName : "route"}))));
 		}
 	}
 	,root: function(ctx) {
@@ -10283,7 +10284,7 @@ tink_web_routing_Router0.prototype = {
 				var this1 = "Access-Control-Allow-Origin".toLowerCase();
 				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(tink_web_routing_Response.textual(200,"application/json",d,[new tink_http_HeaderField(this1,"http://127.0.0.1:3000")]))));
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 87, className : "tink.web.routing.Router0", methodName : "map"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 89, className : "tink.web.routing.Router0", methodName : "map"}))));
 		});
 	}
 	,spawnHero: function(ctx) {
@@ -10305,7 +10306,7 @@ tink_web_routing_Router0.prototype = {
 			break;
 		case "application/x-www-form-urlencoded":
 			tmp = tink_core_Promise.next(ctx.parse(),function(pairs) {
-				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(new tink_querystring_Parser0(null,{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 95, className : "tink.web.routing.Router0", methodName : "spawnHero"}).tryParse(tink_querystring_Pairs.ofIterable(pairs))));
+				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(new tink_querystring_Parser0(null,{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 97, className : "tink.web.routing.Router0", methodName : "spawnHero"}).tryParse(tink_querystring_Pairs.ofIterable(pairs))));
 			});
 			break;
 		default:
@@ -10320,7 +10321,7 @@ tink_web_routing_Router0.prototype = {
 					var this1 = "Access-Control-Allow-Origin".toLowerCase();
 					return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(tink_web_routing_Response.textual(200,"application/json",d,[new tink_http_HeaderField(this1,"http://127.0.0.1:3000")]))));
 				}
-				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 95, className : "tink.web.routing.Router0", methodName : "spawnHero"}))));
+				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/kro13/cosmith/server/CosmithServer.hx", lineNumber : 97, className : "tink.web.routing.Router0", methodName : "spawnHero"}))));
 			});
 		});
 	}
