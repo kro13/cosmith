@@ -36,6 +36,11 @@ class MapData
 		return idsToObjects.exists(id);
 	}
 
+	public function getObjectById(id:Int):TGameObject
+	{
+		return idsToObjects.get(id);
+	}
+
 	public function getObjectsOnSameTile(object:TGameObject):Array<TGameObject>
 	{
 		var result:Array<TGameObject> = [];

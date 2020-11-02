@@ -5,10 +5,7 @@ import kro13.cosmith.client.board.Updater;
 import kro13.cosmith.client.messenger.Messenger;
 import kro13.cosmith.client.ui.MainUI;
 import kro13.cosmith.data.GameData;
-import kro13.cosmith.data.GameDataFactory;
 import kro13.cosmith.data.types.TGameMap;
-import kro13.cosmith.data.types.TGameObject;
-import kro13.cosmith.data.types.TMessage;
 
 class CosmithClient
 {
@@ -18,7 +15,7 @@ class CosmithClient
 
 	public function start():Void
 	{
-		Remote.instance.loadMap(onMapLoaded, onRemoteError);
+		Remote.instance.loadMap(onMapLoaded);
 	}
 
 	private function onMapLoaded(map:TGameMap):Void
@@ -44,32 +41,5 @@ class CosmithClient
 	private function startMessenger():Void
 	{
 		Messenger.instance.start();
-		Messenger.instance.onReceive.add(onMessageReceive);
-	}
-
-	private function onMessageReceive(message:TMessage):Void
-	{
-		switch (message.type)
-		{
-			case COMMAND(command):
-				switch (command)
-				{
-					case SPAWN(id, type, x, y, name):
-						var data:TGameObject = GameDataFactory.instance.newGameObject(id, type);
-						data.x = x;
-						data.y = y;
-						data.name = name;
-						GameData.instance.map.addObject(data);
-
-					default:
-						trace('Command ${command}');
-				}
-			default:
-		}
-	}
-
-	private function onRemoteError(e:Dynamic):Void
-	{
-		trace('Remote error: ${e}');
 	}
 }

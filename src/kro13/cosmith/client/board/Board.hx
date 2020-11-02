@@ -32,11 +32,38 @@ class Board extends Sprite implements IUpdatable
 		Lib.current.addChild(this);
 
 		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
+		Messenger.instance.onReceive.add(onMessageReceive);
 		Updater.instance.add(this);
 	}
 
 	public function update(dt:Float):Void
 	{
+	}
+
+	private function onMessageReceive(message:TMessage):Void
+	{
+		switch (message.type)
+		{
+			case COMMAND(command):
+				switch (command)
+				{
+					case SPAWN(id, type, x, y, name):
+						var data:TGameObject = GameDataFactory.instance.newGameObject(id, type);
+						data.x = x;
+						data.y = y;
+						data.name = name;
+						GameData.instance.map.addObject(data);
+
+					case MOVE(id, x, y):
+						var data:TGameObject = GameData.instance.map.getObjectById(id);
+						data.x = x;
+						data.y = y;
+
+					default:
+						trace('Command ${command}');
+				}
+			default:
+		}
 	}
 
 	private function resize():Void

@@ -10,7 +10,7 @@ import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.TMessage;
 import tink.CoreApi.Future;
 import tink.http.Response.OutgoingResponse;
-import tink.http.containers.*;
+import tink.http.containers.NodeContainer;
 import tink.web.routing.*;
 
 class CosmithServer
@@ -97,8 +97,8 @@ class Root
 		trace('Spawn hero ${body.name}');
 		var hero:TGameObject = GameDataFactory.instance.newGameObject(Storage.goIds++, HERO);
 		hero.name = body.name;
-		hero.x = Math.round(Math.random() * 100);
-		hero.y = Math.round(Math.random() * 100);
+		hero.x = Math.round(Math.random() * 30);
+		hero.y = Math.round(Math.random() * 30);
 		GameData.instance.map.addObject(hero);
 		socketServer.sockets.emit("message",
 			{

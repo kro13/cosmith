@@ -113,7 +113,7 @@ class GameObject extends Sprite implements IUpdatable
 
 	private function handleMove(x:Int, y:Int):Void
 	{
-		Messenger.instance.sendCommand('${data.name} moves to (${x}, ${y}).');
+		Messenger.instance.sendCommand('${data.name} moves to (${x}, ${y}).', MOVE(data.id, x, y));
 	}
 
 	private function get_wTiles():Int

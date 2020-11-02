@@ -11,6 +11,8 @@ class Messenger
 
 	public var onReceive:Signal1<TMessage>;
 
+	private static var MESSENGER_URL:String = "http://localhost:8070/";
+
 	private var client:Client;
 	private var userId(default, null):String = "no_id";
 
@@ -21,7 +23,7 @@ class Messenger
 
 	public function start()
 	{
-		client = new Client("http://localhost:8070/");
+		client = new Client(MESSENGER_URL);
 		client.on("_id", onId);
 		client.on("message", onMessage);
 	}
@@ -33,7 +35,7 @@ class Messenger
 
 	public function sendCommand(text:String, command:ECommand = NONE):Void
 	{
-		send({type: COMMAND(command), text: text});
+		send({userId: userId, type: COMMAND(command), text: text});
 	}
 
 	public function send(message:TMessage):Void

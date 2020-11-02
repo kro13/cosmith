@@ -6,4 +6,5 @@ enum ECommand
 {
 	NONE;
 	SPAWN(id:Int, type:EGameObjectType, x:Int, y:Int, ?name:String);
+	MOVE(id:Int, x:Int, y:Int);
 }

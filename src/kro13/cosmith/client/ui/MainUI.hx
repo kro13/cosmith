@@ -68,14 +68,14 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 			</div>
 			<div className="h-100 bg-dark p-3">
 				<div>
-				<button type="button" onClick=$onBtnShowHideClick className="btn btn-primary">
-					{state.messengerVisible ? props.btnHideText : props.btnShowText}
-				</button>
+					<button type="button" onClick=$onBtnShowHideClick className="btn btn-primary">
+						{state.messengerVisible ? props.btnHideText : props.btnShowText}
+					</button>
 				</div>
 				<div>
-				<button type="button" onClick=$onBtnSpawnClick className="btn btn-primary mt-3">
-					{props.btnSpawnText}
-				</button>
+					<button type="button" onClick=$onBtnSpawnClick className="btn btn-primary mt-3">
+						{props.btnSpawnText}
+					</button>
 				</div>
 			</div>
 		</div>	
@@ -89,7 +89,6 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 
 	private function onBtnSpawnClick(e:Event):Void
 	{
-		trace("click");
 		Remote.instance.spawnHero();
 	}
 

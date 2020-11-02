@@ -1,8 +1,6 @@
 package kro13.cosmith.client;
 
 import haxe.Json;
-import kro13.cosmith.data.GameData;
-import kro13.cosmith.data.GameDataFactory;
 import kro13.cosmith.data.types.TGameMap;
 import tink.core.Error;
 import tink.core.Outcome;
@@ -26,13 +24,13 @@ class Remote
 
 	public function loadMap(onSuccess:TGameMap->Void = null, onError:Dynamic->Void = null)
 	{
-		get(loadMapUrl, onSuccess, onError);
+		get(loadMapUrl, onSuccess, onError != null ? onError : onRemoteError);
 	}
 
 	public function spawnHero(onSuccess:Dynamic->Void = null, onError:Dynamic->Void = null)
 	{
 		var hero = {name: "Brave Hero"};
-		post(spawnHeroUrl, hero, onSuccess, onError);
+		post(spawnHeroUrl, hero, onSuccess, onError != null ? onError : onRemoteError);
 	}
 
 	private function get(url:String, onSuccess:Dynamic->Void, onError:Dynamic->Void):Void
@@ -62,7 +60,15 @@ class Remote
 			case Success(data):
 				if (onSuccess != null)
 				{
-					onSuccess(Json.parse(data.body));
+					var body:Dynamic = null;
+					try
+					{
+						body = Json.parse(data.body);
+						onSuccess(body);
+					} catch (e)
+					{
+						onError(e);
+					}
 				}
 
 			case Failure(failure):
@@ -71,6 +77,11 @@ class Remote
 					onError(failure);
 				}
 		}
+	}
+
+	private function onRemoteError(e:Dynamic):Void
+	{
+		trace('Remote error: ${e}');
 	}
 
 	private static function get_instance():Remote
