@@ -1717,8 +1717,8 @@ kro13_cosmith_server_CosmithServer.startMessenger = function() {
 	console.log("src/kro13/cosmith/server/CosmithServer.hx:56:","Messenger started");
 };
 kro13_cosmith_server_CosmithServer.startRouter = function() {
-	console.log("src/kro13/cosmith/server/CosmithServer.hx:61:","Start router at port " + process.env["$PORT"]);
-	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Path(process.env["$PORT"]));
+	console.log("src/kro13/cosmith/server/CosmithServer.hx:61:","Start router at port " + process.env["PORT"]);
+	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Path(process.env["PORT"]));
 	var router = new tink_web_routing_Router0(new kro13_cosmith_server_Root(kro13_cosmith_server_CosmithServer.socketServer));
 	container.run(new tink_http_SimpleHandler(function(req) {
 		var this1 = router.route(tink_web_routing_Context.ofRequest(req));

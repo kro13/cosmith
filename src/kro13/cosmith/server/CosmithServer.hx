@@ -58,8 +58,8 @@ class CosmithServer
 
 	private static function startRouter():Void
 	{
-		trace('Start router at port ${Node.process.env.get("$PORT")}');
-		var container:NodeContainer = new NodeContainer(Node.process.env.get("$PORT"));
+		trace('Start router at port ${Node.process.env.get("PORT")}');
+		var container:NodeContainer = new NodeContainer(Node.process.env.get("PORT"));
 		var router = new Router<Root>(new Root(socketServer));
 		container.run((req) ->
 		{
