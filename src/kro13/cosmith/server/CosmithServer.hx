@@ -20,7 +20,7 @@ class CosmithServer
 	public static function main()
 	{
 		initData();
-		startMessenger();
+		// startMessenger();
 		startRouter();
 	}
 
