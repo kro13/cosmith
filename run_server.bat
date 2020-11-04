@@ -1,2 +1,2 @@
-haxe build_server.hxml
-node bin\server\server.js
+haxe build_server.hxml -D local_server
+node bin\cosmith-server\server.js

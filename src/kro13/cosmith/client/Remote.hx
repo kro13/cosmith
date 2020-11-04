@@ -13,13 +13,18 @@ class Remote
 {
 	public static var instance(get, null):Remote;
 
-	private static inline var SERVER_URL:String = "http://127.0.0.1:8080";
+	#if local_server
+	public static inline var SERVER_URL:String = "http://127.0.0.1:8080";
+	#else
+	public static inline var SERVER_URL:String = "https://cosmith-server.herokuapp.com";
+	#end
 
 	private var loadMapUrl:String = '${SERVER_URL}/loadMap';
 	private var spawnHeroUrl:String = '${SERVER_URL}/spawnHero';
 
 	private function new()
 	{
+		trace('Remote ${SERVER_URL}');
 	}
 
 	public function loadMap(onSuccess:TGameMap->Void = null, onError:Dynamic->Void = null)

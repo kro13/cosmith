@@ -15,6 +15,7 @@ class CosmithClient
 
 	public function start():Void
 	{
+		///startMessenger();
 		Remote.instance.loadMap(onMapLoaded);
 	}
 

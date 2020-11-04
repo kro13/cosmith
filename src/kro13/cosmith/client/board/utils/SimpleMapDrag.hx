@@ -48,6 +48,7 @@ class SimpleMapDrag
 
 	private function onMouseMove(e:MouseEvent):Void
 	{
+		trace(e.delta);
 		if (!isDragging)
 		{
 			isDragging = true;

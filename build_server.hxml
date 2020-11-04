@@ -3,5 +3,5 @@
 -lib tink_web
 -lib hxnodejs
 -lib hxsocketio
--js bin/server/server.js
+-js bin/cosmith-server/server.js
 -main kro13.cosmith.server.CosmithServer

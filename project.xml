@@ -16,7 +16,8 @@
 	<haxelib name="tink_http"/>
 	<!--server haxelibs-->
 	<haxelib name="tink_web"/>
-	<haxelib name="hxnodejs"/>
+	<!-- <haxelib name="tink_http_middleware"/> -->
+	<!-- <haxelib name="hxnodejs"/> -->
 	<!--server haxelibs-->
 
 	<assets path="assets/css" rename="css"/>
