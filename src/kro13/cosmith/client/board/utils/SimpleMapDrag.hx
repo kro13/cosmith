@@ -13,6 +13,9 @@ class SimpleMapDrag
 
 	private var map:GameMap;
 	private var container:Sprite;
+	private var mouseX:Float;
+	private var mouseY:Float;
+	private var threshold:Float = 10;
 
 	public function new(map:GameMap)
 	{
@@ -32,28 +35,39 @@ class SimpleMapDrag
 
 	private function onMouseDown(e:MouseEvent):Void
 	{
-		var constraintX:Float = (container.width - Lib.current.stage.stageWidth) / container.scaleX;
-		var constraintY:Float = (container.height - Lib.current.stage.stageHeight) / container.scaleY;
-		map.startDrag(false, new Rectangle(-constraintX, -constraintY, constraintX, constraintY));
+		mouseX = Lib.current.mouseX;
+		mouseY = Lib.current.mouseY;
 		map.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		trace('start drag');
 	}
 
 	private function onMouseUp(e:MouseEvent):Void
 	{
+		if (isDragging)
+		{
+			map.stopDrag();
+			isDragging = false;
+		}
 		map.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		map.stopDrag();
-		Timer.delay(() -> isDragging = false, 100);
 	}
 
 	private function onMouseMove(e:MouseEvent):Void
 	{
-		trace(e.delta);
-		if (!isDragging)
+		var delta:Float = Math.sqrt((mouseX - Lib.current.mouseX) * (mouseX - Lib.current.mouseX)
+			+ (mouseY - Lib.current.mouseY) * (mouseY - Lib.current.mouseY));
+		if (delta > threshold)
 		{
-			isDragging = true;
-			trace(isDragging);
+			startDrag();
 		}
+	}
+
+	private function startDrag():Void
+	{
+		var constraintX:Float = (container.width - Lib.current.stage.stageWidth) / container.scaleX;
+		var constraintY:Float = (container.height - Lib.current.stage.stageHeight) / container.scaleY;
+		map.startDrag(false, new Rectangle(-constraintX, -constraintY, constraintX, constraintY));
+		isDragging = true;
+		map.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		trace('Start drag');
 	}
 
 	private function doStart():Void
