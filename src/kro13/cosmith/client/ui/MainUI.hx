@@ -51,17 +51,6 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 		Lib.current.addEventListener(openfl.events.Event.ENTER_FRAME, onEnterFrame);
 	}
 
-	override public function componentWillUnmount():Void
-	{
-		trace("will unmount");
-		Messenger.instance.onReceive.remove(onMessageReceive);
-	}
-
-	override public function componentDidMount()
-	{
-		trace("did mount");
-	}
-
 	override public function render()
 	{
 		contentRoot = cast document.getElementById("contentRoot");
