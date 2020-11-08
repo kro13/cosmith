@@ -1,16 +1,19 @@
 package kro13.cosmith.client.board.utils;
 
+import kro13.cosmith.client.messenger.Messenger;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 
-class SimpleMapZoom
+class SimpleMapZoom implements IMapZoom
 {
-	private static inline var MIN_SCALE:Float = 1;
-	private static inline var MAX_SCALE:Float = 3;
-	private static inline var SCALE_STEP:Float = 2000;
+	public var isZooming(default, null):Bool;
 
+	private static inline var MIN_SCALE:Float = 1;
+	private static inline var MAX_SCALE:Float = 2;
+
+	private var scaleStep:Float = 2000;
 	private var map:GameMap;
 	private var container:Sprite;
 	private var mapScale:Float = 1;
@@ -18,6 +21,7 @@ class SimpleMapZoom
 	public function new(map:GameMap)
 	{
 		this.map = map;
+		isZooming = false;
 	}
 
 	public function reset()
@@ -38,14 +42,19 @@ class SimpleMapZoom
 
 	private function onMouseWheel(e:MouseEvent):Void
 	{
-		var scaleDelta:Float = e.delta / SCALE_STEP;
+		zoom(e.delta);
+	}
+
+	private function zoom(delta:Float):Void
+	{
+		var scaleDelta:Float = delta / scaleStep;
 		if (mapScale + scaleDelta > MAX_SCALE)
 		{
-			scaleDelta = MAX_SCALE - mapScale;
+			scaleDelta = 0;
 		}
 		if (mapScale + scaleDelta < MIN_SCALE)
 		{
-			scaleDelta = -Math.abs(MIN_SCALE - mapScale);
+			scaleDelta = 0;
 		}
 		if (scaleDelta == 0)
 		{
@@ -53,9 +62,9 @@ class SimpleMapZoom
 		}
 
 		mapScale += scaleDelta;
-		var scaleRatio:Float = mapScale / (mapScale - scaleDelta);
 		map.scaleX = map.scaleY = mapScale;
 
+		var scaleRatio:Float = mapScale / (mapScale - scaleDelta);
 		var mouseX:Float = Lib.current.mouseX / container.scaleX;
 		var mouseY:Float = Lib.current.mouseY / container.scaleY;
 		var targetX:Float = map.x - (mouseX - map.x) * (scaleRatio - 1);
@@ -71,6 +80,11 @@ class SimpleMapZoom
 	private function doStart():Void
 	{
 		container = cast map.parent;
+		startInputListening();
+	}
+
+	private function startInputListening():Void
+	{
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 	}
 

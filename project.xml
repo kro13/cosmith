@@ -16,7 +16,6 @@
 	<haxelib name="tink_http"/>
 	<!--server haxelibs-->
 	<haxelib name="tink_web"/>
-	<!-- <haxelib name="tink_http_middleware"/> -->
 	<!-- <haxelib name="hxnodejs"/> -->
 	<!--server haxelibs-->
 

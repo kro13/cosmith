@@ -1,13 +1,18 @@
 package kro13.cosmith.client.board;
 
 import kro13.cosmith.client.board.gameObjects.GameObject;
+import kro13.cosmith.client.board.utils.IMapDrag;
+import kro13.cosmith.client.board.utils.IMapZoom;
 import kro13.cosmith.client.board.utils.MapGrid;
 import kro13.cosmith.client.board.utils.SimpleMapDrag;
 import kro13.cosmith.client.board.utils.SimpleMapZoom;
+import kro13.cosmith.client.board.utils.TouchMapDrag;
+import kro13.cosmith.client.board.utils.TouchMapZoom;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.scopes.MapData;
 import kro13.cosmith.data.types.TGameObject;
 import openfl.events.MouseEvent;
+import openfl.ui.Multitouch;
 
 class GameMap extends GameObject
 {
@@ -15,8 +20,8 @@ class GameMap extends GameObject
 	private var idsToInstances:Map<Int, GameObject>;
 	private var idsToInstancesKeys:Array<Int>;
 	private var selectedObj:GameObject;
-	private var drag:SimpleMapDrag;
-	private var zoom:SimpleMapZoom;
+	private var drag:IMapDrag;
+	private var zoom:IMapZoom;
 
 	public function new(data:TGameObject)
 	{
@@ -30,8 +35,15 @@ class GameMap extends GameObject
 	{
 		super.start();
 		addChild(grid);
-		drag = new SimpleMapDrag(this);
-		zoom = new SimpleMapZoom(this);
+		if (Multitouch.supportsTouchEvents)
+		{
+			zoom = new TouchMapZoom(this);
+			drag = new TouchMapDrag(this);
+		} else
+		{
+			drag = new SimpleMapDrag(this);
+			zoom = new SimpleMapZoom(this);
+		}
 		drag.start();
 		zoom.start();
 		addEventListener(MouseEvent.CLICK, onClick);
@@ -98,8 +110,7 @@ class GameMap extends GameObject
 
 	private function onClick(e:MouseEvent):Void
 	{
-		trace(drag.isDragging);
-		if (drag.isDragging)
+		if (drag.isDragging || zoom.isZooming)
 		{
 			return;
 		}

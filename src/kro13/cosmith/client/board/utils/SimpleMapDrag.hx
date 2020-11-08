@@ -7,7 +7,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
 
-class SimpleMapDrag
+class SimpleMapDrag implements IMapDrag
 {
 	public var isDragging(default, null):Bool;
 
@@ -45,7 +45,7 @@ class SimpleMapDrag
 		if (isDragging)
 		{
 			map.stopDrag();
-			isDragging = false;
+			Timer.delay(() -> isDragging = false, 100);
 		}
 		map.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 	}
@@ -67,7 +67,6 @@ class SimpleMapDrag
 		map.startDrag(false, new Rectangle(-constraintX, -constraintY, constraintX, constraintY));
 		isDragging = true;
 		map.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		trace('Start drag');
 	}
 
 	private function doStart():Void
