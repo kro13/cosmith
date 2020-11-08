@@ -1,6 +1,7 @@
 package kro13.cosmith.client;
 
 import haxe.Json;
+import kro13.cosmith.client.messenger.Messenger;
 import kro13.cosmith.data.types.TGameMap;
 import tink.core.Error;
 import tink.core.Outcome;
@@ -34,7 +35,7 @@ class Remote
 
 	public function spawnHero(onSuccess:Dynamic->Void = null, onError:Dynamic->Void = null)
 	{
-		var hero = {name: "Brave Hero"};
+		var hero = {userId: Messenger.instance.userId, name: "Brave Hero"};
 		post(spawnHeroUrl, hero, onSuccess, onError != null ? onError : onRemoteError);
 	}
 

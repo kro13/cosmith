@@ -45,23 +45,8 @@ class Board extends Sprite implements IUpdatable
 		switch (message.type)
 		{
 			case COMMAND(command):
-				switch (command)
-				{
-					case SPAWN(id, type, x, y, name):
-						var data:TGameObject = GameDataFactory.instance.newGameObject(id, type);
-						data.x = x;
-						data.y = y;
-						data.name = name;
-						GameData.instance.map.addObject(data);
+				GameData.instance.process(command);
 
-					case MOVE(id, x, y):
-						var data:TGameObject = GameData.instance.map.getObjectById(id);
-						data.x = x;
-						data.y = y;
-
-					default:
-						trace('Command ${command}');
-				}
 			default:
 		}
 	}

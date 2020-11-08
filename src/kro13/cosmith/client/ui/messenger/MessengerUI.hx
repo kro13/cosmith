@@ -36,7 +36,7 @@ class MessengerUI extends ReactComponentOfPropsAndState<MessengerUIProps, Messen
 	override public function render():ReactElement
 	{
 		var msgItems:Array<Dynamic> = state.allMessages.map(msg ->
-			jsx('<$MessageUI key={messageKeys++} isMine={Messenger.instance.isMine(msg)} text={msg.text}/>'));
+			jsx('<$MessageUI key={messageKeys++} isMine={Messenger.instance.isMine(msg.userId)} text={msg.text}/>'));
 
 		return jsx('
 		<div className="py-3 pl-3 h-100 w-100 bg-dark d-flex flex-column"><!--flex-column to resize content properly-->

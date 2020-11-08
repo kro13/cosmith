@@ -10,9 +10,9 @@ class Messenger
 	public static var instance(get, null):Messenger;
 
 	public var onReceive:Signal1<TMessage>;
+	public var userId(default, null):String = "no_id";
 
 	private var client:Client;
-	private var userId(default, null):String = "no_id";
 
 	private function new(offline:Bool = false)
 	{
@@ -46,9 +46,9 @@ class Messenger
 		client.emit("message", message);
 	}
 
-	public function isMine(message:TMessage):Bool
+	public function isMine(id:String):Bool
 	{
-		return message.userId != null && message.userId == userId;
+		return id != null && id == userId;
 	}
 
 	private function onId(id:String):Void

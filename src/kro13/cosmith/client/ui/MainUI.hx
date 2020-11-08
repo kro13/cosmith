@@ -7,7 +7,10 @@ import js.html.DivElement;
 import js.html.Element;
 import js.html.Event;
 import js.html.LinkElement;
+import kro13.cosmith.client.messenger.Messenger;
 import kro13.cosmith.client.ui.messenger.MessengerUI;
+import kro13.cosmith.data.GameData;
+import kro13.cosmith.data.types.TMessage;
 import openfl.Lib;
 import react.ReactComponent.ReactComponentOfPropsAndState;
 import react.ReactComponent.ReactElement;
@@ -34,7 +37,8 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 		super(props);
 		state =
 			{
-				messengerVisible: true
+				messengerVisible: true,
+				spawnVisible: true
 			};
 	}
 
@@ -45,6 +49,17 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 		canvas = cast document.getElementsByTagName("canvas").item(0);
 		ReactDOM.render(jsx('<$MainUI/>'), uiRoot);
 		Lib.current.addEventListener(openfl.events.Event.ENTER_FRAME, onEnterFrame);
+	}
+
+	override public function componentWillUnmount():Void
+	{
+		trace("will unmount");
+		Messenger.instance.onReceive.remove(onMessageReceive);
+	}
+
+	override public function componentDidMount()
+	{
+		trace("did mount");
 	}
 
 	override public function render()
@@ -72,7 +87,7 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 						{state.messengerVisible ? props.btnHideText : props.btnShowText}
 					</button>
 				</div>
-				<div>
+				<div style={{display:state.spawnVisible ? "block" : "none"}}>
 					<button type="button" onClick=$onBtnSpawnClick className="btn btn-primary mt-3">
 						{props.btnSpawnText}
 					</button>
@@ -89,7 +104,17 @@ class MainUI extends ReactComponentOfPropsAndState<MainUIProps, MainUIState>
 
 	private function onBtnSpawnClick(e:Event):Void
 	{
+		Messenger.instance.onReceive.add(onMessageReceive);
 		Remote.instance.spawnHero();
+	}
+
+	private function onMessageReceive(message:TMessage):Void
+	{
+		if (GameData.instance.map.getHeroByUserId(Messenger.instance.userId) == null)
+		{
+			setState({spawnVisible: false});
+			Messenger.instance.onReceive.remove(onMessageReceive);
+		}
 	}
 
 	private function onEnterFrame(e:openfl.events.Event):Void
@@ -119,4 +144,5 @@ typedef MainUIProps =
 typedef MainUIState =
 {
 	var messengerVisible:Bool;
+	var spawnVisible:Bool;
 }

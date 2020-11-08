@@ -8,6 +8,7 @@ import js.node.socketio.Server;
 import js.node.socketio.Socket;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.GameDataFactory;
+import kro13.cosmith.data.types.ECommand;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.TMessage;
@@ -61,9 +62,20 @@ class CosmithServer
 			socketServer.sockets.to(socket.id).emit("_id", socket.id);
 			socket.on("message", (message:TMessage) ->
 			{
+				processMessage(message);
 				socketServer.sockets.emit("message", message);
 			});
 		});
+	}
+
+	private static function processMessage(message:TMessage):Void
+	{
+		switch (message.type)
+		{
+			case COMMAND(command):
+				GameData.instance.process(command);
+			default:
+		}
 	}
 
 	private static function initRouter(nodeServer:NodeServer, socketServer:SocketServer):Void
@@ -124,19 +136,24 @@ class Root
 	// @:header("Access-Control-Allow-Origin", "*")
 
 	@:post('/spawnHero')
-	public function spawnHero(body:{name:String}):TStatus
+	public function spawnHero(body:{userId:String, name:String}):TStatus
 	{
-		trace('Spawn hero ${body.name}');
-		var hero:TGameObject = GameDataFactory.instance.newGameObject(Storage.goIds++, HERO);
-		hero.name = body.name;
-		hero.x = Math.round(Math.random() * 30);
-		hero.y = Math.round(Math.random() * 30);
-		GameData.instance.map.addObject(hero);
-		socketServer.sockets.emit("message",
-			{
-				text: 'Spawn hero ${hero.name} at (${hero.x} ${hero.y})',
-				type: COMMAND(SPAWN(hero.id, hero.type, hero.x, hero.y, hero.name))
-			});
+		if (GameData.instance.map.getHeroByUserId(body.userId) == null)
+		{
+			trace('Spawn hero ${body.name}');
+			var hero:THero = cast GameDataFactory.instance.newGameObject(Storage.goIds++, HERO);
+			hero.userId = body.userId;
+			hero.name = body.name;
+			hero.x = Math.round(Math.random() * 30);
+			hero.y = Math.round(Math.random() * 30);
+			var spawnCmd:ECommand = SPAWN(hero);
+			GameData.instance.process(spawnCmd);
+			socketServer.sockets.emit("message",
+				{
+					text: 'Spawn hero ${hero.name} at (${hero.x} ${hero.y})',
+					type: COMMAND(spawnCmd)
+				});
+		}
 		return {status: "OK"};
 	}
 }

@@ -12,6 +12,12 @@ typedef TGameObject =
 	var name:String;
 }
 
+typedef THero =
+{
+	> TGameObject,
+	userId:String
+}
+
 enum abstract EGameObjectType(Int)
 {
 	var NONE = 0;

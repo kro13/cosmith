@@ -3,6 +3,8 @@ package kro13.cosmith.data;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 
+using kro13.cosmith.data.utils.StructureCombiner;
+
 class GameDataFactory
 {
 	public static var instance(get, null):GameDataFactory;
@@ -39,7 +41,7 @@ class GameDataFactory
 				name: ""
 			};
 
-		switch (type)
+		return switch (type)
 		{
 			case PAWN:
 				setupPawn(template);
@@ -48,27 +50,29 @@ class GameDataFactory
 			case HERO:
 				setupHero(template);
 			default:
+				template;
 		}
-
-		return template;
 	}
 
-	private function setupPawn(tmpl:TGameObject):Void
+	private function setupPawn(tmpl:TGameObject):TGameObject
 	{
 		tmpl.w = tmpl.h = 5;
 		tmpl.name = 'Pawn${tmpl.id}';
+		return tmpl;
 	}
 
-	private function setupNPC(tmpl:TGameObject):Void
+	private function setupNPC(tmpl:TGameObject):TGameObject
 	{
 		tmpl.w = tmpl.h = 2;
 		tmpl.name = 'NPC${tmpl.id}';
+		return tmpl;
 	}
 
-	private function setupHero(tmpl:TGameObject):Void
+	private function setupHero(tmpl:TGameObject):THero
 	{
 		tmpl.w = tmpl.h = 3;
 		tmpl.name = 'Hero${tmpl.id}';
+		return tmpl.combine({userId: ""});
 	}
 
 	private static function get_instance():GameDataFactory

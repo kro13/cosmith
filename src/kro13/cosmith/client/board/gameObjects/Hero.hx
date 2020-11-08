@@ -6,10 +6,13 @@ import kro13.cosmith.data.types.TGameObject;
 
 class Hero extends Pawn
 {
+	private var heroData:THero;
+
 	public function new(data:TGameObject)
 	{
 		super(data);
-		movable = true;
+		heroData = cast data;
+		controllable = Messenger.instance.isMine(heroData.userId);
 	}
 
 	override private function handleMove(x:Int, y:Int)

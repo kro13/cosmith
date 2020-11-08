@@ -16,7 +16,7 @@ class GameObject extends Sprite implements IUpdatable
 	public var xTiles(get, set):Int;
 	public var yTiles(get, set):Int;
 	public var selectable:Bool = false;
-	public var movable:Bool = false;
+	public var controllable:Bool = false;
 
 	private var data:TGameObject;
 	private var bmpData:Bitmap;

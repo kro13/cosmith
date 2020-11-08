@@ -57,7 +57,6 @@ class GameMap extends GameObject
 		{
 			if (!hasInstance(obj))
 			{
-				trace(obj.id);
 				var goInstance:GameObject = GameObjectsFactory.instance.buildGameObject(obj);
 				goInstance.start();
 				addInstance(obj.id, goInstance);
@@ -137,7 +136,7 @@ class GameMap extends GameObject
 			return;
 		}
 
-		if (selectedObj.movable)
+		if (selectedObj.controllable)
 		{
 			moveSelectedObject(mouseXToTiles(e.stageX), mouseYToTiles(e.stageY));
 			return;

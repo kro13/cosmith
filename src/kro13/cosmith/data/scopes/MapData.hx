@@ -11,6 +11,7 @@ class MapData
 	public var objects(default, null):Array<TGameObject>;
 
 	private var idsToObjects:Map<Int, TGameObject>;
+	private var userIdsToHeroes:Map<String, THero>;
 
 	public function new(data:TGameMap)
 	{
@@ -22,13 +23,13 @@ class MapData
 	public function addObject(object:TGameObject):Void
 	{
 		objects.push(object);
-		idsToObjects.set(object.id, object);
+		addToIndex(object);
 	}
 
 	public function removeObject(object:TGameObject):Void
 	{
 		objects.remove(object);
-		idsToObjects.remove(object.id);
+		removeFromIndex(object);
 	}
 
 	public function objectExists(id:Int):Bool
@@ -39,6 +40,11 @@ class MapData
 	public function getObjectById(id:Int):TGameObject
 	{
 		return idsToObjects.get(id);
+	}
+
+	public function getHeroByUserId(userId:String):THero
+	{
+		return userIdsToHeroes.get(userId);
 	}
 
 	public function getObjectsOnSameTile(object:TGameObject):Array<TGameObject>
@@ -57,9 +63,30 @@ class MapData
 	private function buildIndex():Void
 	{
 		idsToObjects = new Map();
+		userIdsToHeroes = new Map();
 		for (obj in objects)
 		{
-			idsToObjects.set(obj.id, obj);
+			addToIndex(obj);
+		}
+	}
+
+	private function addToIndex(obj:TGameObject):Void
+	{
+		idsToObjects.set(obj.id, obj);
+		if (obj.type == HERO)
+		{
+			var hero:THero = cast obj;
+			userIdsToHeroes.set(hero.userId, hero);
+		}
+	}
+
+	private function removeFromIndex(obj:TGameObject):Void
+	{
+		idsToObjects.remove(obj.id);
+		if (obj.type == HERO)
+		{
+			var hero:THero = cast obj;
+			userIdsToHeroes.remove(hero.userId);
 		}
 	}
 
