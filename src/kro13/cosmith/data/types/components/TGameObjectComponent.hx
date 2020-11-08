@@ -9,4 +9,5 @@ enum abstract EGameObjectComponentType(String) from String to String
 {
 	var OWNER = "owner";
 	var RENDER = "render";
+	var STATS = "stats";
 }

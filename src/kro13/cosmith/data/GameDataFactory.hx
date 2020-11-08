@@ -6,6 +6,7 @@ import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.components.TGameObjectComponent;
 import kro13.cosmith.data.types.components.TOwnerComponent;
 import kro13.cosmith.data.types.components.TRenderComponent;
+import kro13.cosmith.data.types.components.TStatsComponent;
 
 using kro13.cosmith.data.utils.StructureCombiner;
 
@@ -73,9 +74,12 @@ class GameDataFactory
 
 	private function setupHero(tmpl:GameObjectData):TGameObject
 	{
+		tmpl.name = 'Hero${tmpl.id}';
 		var render:TRenderComponent = tmpl.getComponent(RENDER);
 		render.w = render.h = 3;
-		tmpl.name = 'Hero${tmpl.id}';
+		var stats:TStatsComponent = newStatsComponent();
+		stats.movementPoints = 10;
+		tmpl.components.push(stats);
 		tmpl.components.push(newOwnerComponent());
 		return tmpl;
 	}
@@ -98,6 +102,14 @@ class GameDataFactory
 			h: 0,
 			w: 0
 		};
+	}
+
+	private function newStatsComponent():TStatsComponent
+	{
+		return {
+			type: STATS,
+			movementPoints: 0
+		}
 	}
 
 	private static function get_instance():GameDataFactory

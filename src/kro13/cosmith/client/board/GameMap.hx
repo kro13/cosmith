@@ -163,9 +163,6 @@ class GameMap extends GameSprite
 
 	private function moveSelectedObject(tilesX:Int, tilesY:Int):Void
 	{
-		var objRender:TRenderComponent = selectedObj.data.getComponent(RENDER);
-		objRender.x = tilesX;
-		objRender.y = tilesY;
 		selectedObj.handleInteraction(MOVE(tilesX, tilesY));
 	}
 
