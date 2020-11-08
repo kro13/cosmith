@@ -4,20 +4,26 @@ import kro13.cosmith.client.board.gameObjects.GameObject;
 import kro13.cosmith.client.board.utils.IMapDrag;
 import kro13.cosmith.client.board.utils.IMapZoom;
 import kro13.cosmith.client.board.utils.MapGrid;
+import kro13.cosmith.client.board.utils.MathUtils;
 import kro13.cosmith.client.board.utils.SimpleMapDrag;
 import kro13.cosmith.client.board.utils.SimpleMapZoom;
 import kro13.cosmith.client.board.utils.TouchMapDrag;
 import kro13.cosmith.client.board.utils.TouchMapZoom;
 import kro13.cosmith.data.GameData;
+import kro13.cosmith.data.scopes.GameObjectData;
 import kro13.cosmith.data.scopes.MapData;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.components.TRenderComponent;
+import kro13.cosmith.data.types.components.TRevealedComponent;
+import kro13.cosmith.data.types.components.TStatsComponent;
 import openfl.events.MouseEvent;
 import openfl.ui.Multitouch;
 
 class GameMap extends GameSprite
 {
+	public var myHero(default, set):GameObjectData;
+
 	private var grid:MapGrid;
 	private var idsToInstances:Map<Int, GameObject>;
 	private var idsToInstancesKeys:Array<Int>;
@@ -33,6 +39,15 @@ class GameMap extends GameSprite
 		grid = new MapGrid();
 		idsToInstances = new Map();
 		idsToInstancesKeys = [];
+	}
+
+	private function set_myHero(val:GameObjectData):GameObjectData
+	{
+		myHero = val;
+		var instance:GameObject = addInstance(myHero);
+		var render:TRenderComponent = myHero.getComponent(RENDER);
+		instance.handleInteraction(MOVE(render.x, render.y));
+		return myHero;
 	}
 
 	override public function start():Void
@@ -56,14 +71,33 @@ class GameMap extends GameSprite
 	override public function update(dt:Float):Void
 	{
 		super.update(dt);
+		if (myHero == null)
+		{
+			return;
+		}
+
+		var myRevealed:TRevealedComponent = myHero.getComponent(REVEALED);
+		var myStats:TStatsComponent = myHero.getComponent(STATS);
+		var myRender:TRenderComponent = myHero.getComponent(RENDER);
+
 		// add new instances
 		for (obj in GameData.instance.map.objects)
 		{
 			if (!hasInstance(obj))
 			{
-				var goInstance:GameObject = GameObjectsFactory.instance.buildGameObject(obj);
-				goInstance.start();
-				addInstance(obj.id, goInstance);
+				if (myRevealed.ids.indexOf(obj.id) >= 0)
+				{
+					addInstance(obj);
+					continue;
+				}
+				if (obj.type == HERO)
+				{
+					var objRender:TRenderComponent = obj.getComponent(RENDER);
+					if (MathUtils.distanceInt(myRender.x, myRender.y, objRender.x, objRender.y) <= myStats.visionRange)
+					{
+						addInstance(obj);
+					}
+				}
 			}
 		}
 		// remove redundant instances
@@ -72,6 +106,16 @@ class GameMap extends GameSprite
 			if (!GameData.instance.map.objectExists(id))
 			{
 				removeInstance(id);
+				continue;
+			}
+			var instance:GameObject = idsToInstances.get(id);
+			if (instance.data.type == HERO)
+			{
+				var objRender:TRenderComponent = instance.data.getComponent(RENDER);
+				if (MathUtils.distanceInt(myRender.x, myRender.y, objRender.x, objRender.y) > myStats.visionRange)
+				{
+					removeInstance(id);
+				}
 			}
 		}
 	}
@@ -87,11 +131,14 @@ class GameMap extends GameSprite
 		grid.redraw(w, h);
 	}
 
-	private function addInstance(id:Int, instance:GameObject):Void
+	private function addInstance(obj:TGameObject):GameObject
 	{
-		idsToInstancesKeys.push(id);
-		idsToInstances.set(id, instance);
+		var instance:GameObject = GameObjectsFactory.instance.buildGameObject(obj);
+		instance.start();
+		idsToInstancesKeys.push(obj.id);
+		idsToInstances.set(obj.id, instance);
 		addChild(instance);
+		return instance;
 	}
 
 	private function removeInstance(id:Int):Void
@@ -140,7 +187,7 @@ class GameMap extends GameSprite
 			return;
 		}
 
-		if (selectedObj.controllable)
+		if (myHero != null && selectedObj.data.id == myHero.id)
 		{
 			moveSelectedObject(mouseXToTiles(e.stageX), mouseYToTiles(e.stageY));
 			return;

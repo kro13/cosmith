@@ -3,10 +3,12 @@ package kro13.cosmith.client.board;
 import kro13.cosmith.client.messenger.Messenger;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.GameDataFactory;
+import kro13.cosmith.data.scopes.GameObjectData;
 import kro13.cosmith.data.types.ECommand;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.TMessage;
+import kro13.cosmith.data.types.components.TOwnerComponent;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -47,8 +49,27 @@ class Board extends Sprite implements IUpdatable
 		{
 			case COMMAND(command):
 				GameData.instance.process(command);
+				switch (command)
+				{
+					case SPAWN(data):
+						trySetMyHero(data);
+					default:
+				}
 
 			default:
+		}
+	}
+
+	private function trySetMyHero(data:GameObjectData):Void
+	{
+		if (map.myHero != null || data.type != HERO)
+		{
+			return;
+		}
+		var owner:TOwnerComponent = data.getComponent(OWNER);
+		if (Messenger.instance.isMine(owner.userId))
+		{
+			map.myHero = data;
 		}
 	}
 

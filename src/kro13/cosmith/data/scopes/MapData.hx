@@ -49,14 +49,13 @@ class MapData
 		return userIdsToHeroes.get(userId);
 	}
 
-	public function getObjectsOnSameTile(object:GameObjectData):Array<TGameObject>
+	public function getObjectsOnTile(x:Int, y:Int):Array<TGameObject>
 	{
 		var result:Array<TGameObject> = [];
-		var render:TRenderComponent = object.getComponent(RENDER);
 		for (obj in objects)
 		{
 			var objRender:TRenderComponent = obj.getComponent(RENDER);
-			if (render.x == objRender.x && render.y == objRender.y && obj.id != object.id)
+			if (x == objRender.x && y == objRender.y)
 			{
 				result.push(obj);
 			}

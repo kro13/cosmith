@@ -6,6 +6,7 @@ import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.components.TGameObjectComponent;
 import kro13.cosmith.data.types.components.TOwnerComponent;
 import kro13.cosmith.data.types.components.TRenderComponent;
+import kro13.cosmith.data.types.components.TRevealedComponent;
 import kro13.cosmith.data.types.components.TStatsComponent;
 
 using kro13.cosmith.data.utils.StructureCombiner;
@@ -79,7 +80,9 @@ class GameDataFactory
 		render.w = render.h = 3;
 		var stats:TStatsComponent = newStatsComponent();
 		stats.movementPoints = 10;
+		stats.visionRange = 5;
 		tmpl.components.push(stats);
+		tmpl.components.push(newRevealedComponent());
 		tmpl.components.push(newOwnerComponent());
 		return tmpl;
 	}
@@ -108,8 +111,17 @@ class GameDataFactory
 	{
 		return {
 			type: STATS,
-			movementPoints: 0
+			movementPoints: 0,
+			visionRange: 0
 		}
+	}
+
+	private function newRevealedComponent():TRevealedComponent
+	{
+		return {
+			type: REVEALED,
+			ids: []
+		};
 	}
 
 	private static function get_instance():GameDataFactory

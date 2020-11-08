@@ -8,4 +8,6 @@ enum ECommand
 	NONE;
 	SPAWN(data:TGameObject);
 	MOVE(id:Int, x:Int, y:Int);
+	HIT(id:Int, targetId:Int);
+	REVEAL(id:Int, targetId:Int);
 }

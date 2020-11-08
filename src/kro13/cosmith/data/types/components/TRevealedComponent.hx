@@ -2,9 +2,8 @@ package kro13.cosmith.data.types.components;
 
 import kro13.cosmith.data.types.components.TGameObjectComponent;
 
-typedef TStatsComponent =
+typedef TRevealedComponent =
 {
 	> TGameObjectComponent,
-	var movementPoints:Int;
-	var visionRange:Int;
+	ids:Array<Int>
 }

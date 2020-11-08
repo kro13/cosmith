@@ -12,7 +12,6 @@ import openfl.display.Sprite;
 class GameObject extends GameSprite
 {
 	public var selectable:Bool = false;
-	public var controllable:Bool = false;
 	public var data(default, null):GameObjectData;
 
 	public function new(data:TGameObject)
