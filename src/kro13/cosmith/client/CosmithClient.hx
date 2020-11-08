@@ -1,5 +1,6 @@
 package kro13.cosmith.client;
 
+import haxe.Json;
 import kro13.cosmith.client.board.Board;
 import kro13.cosmith.client.board.Updater;
 import kro13.cosmith.client.messenger.Messenger;

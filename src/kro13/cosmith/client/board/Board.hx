@@ -4,6 +4,7 @@ import kro13.cosmith.client.messenger.Messenger;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.GameDataFactory;
 import kro13.cosmith.data.types.ECommand;
+import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.TMessage;
 import openfl.Lib;
@@ -25,7 +26,7 @@ class Board extends Sprite implements IUpdatable
 
 	public function start():Void
 	{
-		var mapData:TGameObject = GameData.instance.map.data;
+		var mapData:TGameMap = GameData.instance.map.data;
 		map = new GameMap(mapData);
 		map.start();
 		this.addChild(map);
@@ -57,7 +58,7 @@ class Board extends Sprite implements IUpdatable
 		var h:Float = Math.max(MIN_H, Lib.current.stage.stageHeight);
 		var scale:Float = Math.max(w / map.w, h / map.h);
 		scaleX = scaleY = scale;
-		trace('scale ${scale}');
+		// trace('scale ${scale}');
 	}
 
 	private function onResize(e:Event):Void

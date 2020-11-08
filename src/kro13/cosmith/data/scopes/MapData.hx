@@ -2,16 +2,18 @@ package kro13.cosmith.data.scopes;
 
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
+import kro13.cosmith.data.types.components.TOwnerComponent;
+import kro13.cosmith.data.types.components.TRenderComponent;
 
 class MapData
 {
 	public static inline var TILE_SIZE:Int = 10;
 
 	public var data(default, null):TGameMap;
-	public var objects(default, null):Array<TGameObject>;
+	public var objects(default, null):Array<GameObjectData>;
 
-	private var idsToObjects:Map<Int, TGameObject>;
-	private var userIdsToHeroes:Map<String, THero>;
+	private var idsToObjects:Map<Int, GameObjectData>;
+	private var userIdsToHeroes:Map<String, GameObjectData>;
 
 	public function new(data:TGameMap)
 	{
@@ -42,17 +44,19 @@ class MapData
 		return idsToObjects.get(id);
 	}
 
-	public function getHeroByUserId(userId:String):THero
+	public function getHeroByUserId(userId:String):TGameObject
 	{
 		return userIdsToHeroes.get(userId);
 	}
 
-	public function getObjectsOnSameTile(object:TGameObject):Array<TGameObject>
+	public function getObjectsOnSameTile(object:GameObjectData):Array<TGameObject>
 	{
 		var result:Array<TGameObject> = [];
+		var render:TRenderComponent = object.getComponent(RENDER);
 		for (obj in objects)
 		{
-			if (obj.x == object.x && obj.y == object.y && obj.id != object.id)
+			var objRender:TRenderComponent = obj.getComponent(RENDER);
+			if (render.x == objRender.x && render.y == objRender.y && obj.id != object.id)
 			{
 				result.push(obj);
 			}
@@ -70,23 +74,23 @@ class MapData
 		}
 	}
 
-	private function addToIndex(obj:TGameObject):Void
+	private function addToIndex(obj:GameObjectData):Void
 	{
 		idsToObjects.set(obj.id, obj);
 		if (obj.type == HERO)
 		{
-			var hero:THero = cast obj;
-			userIdsToHeroes.set(hero.userId, hero);
+			var owner:TOwnerComponent = obj.getComponent(OWNER);
+			userIdsToHeroes.set(owner.userId, obj);
 		}
 	}
 
-	private function removeFromIndex(obj:TGameObject):Void
+	private function removeFromIndex(obj:GameObjectData):Void
 	{
 		idsToObjects.remove(obj.id);
 		if (obj.type == HERO)
 		{
-			var hero:THero = cast obj;
-			userIdsToHeroes.remove(hero.userId);
+			var owner:TOwnerComponent = obj.getComponent(OWNER);
+			userIdsToHeroes.remove(owner.userId);
 		}
 	}
 

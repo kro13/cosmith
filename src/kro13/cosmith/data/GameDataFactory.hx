@@ -1,7 +1,11 @@
 package kro13.cosmith.data;
 
+import kro13.cosmith.data.scopes.GameObjectData;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
+import kro13.cosmith.data.types.components.TGameObjectComponent;
+import kro13.cosmith.data.types.components.TOwnerComponent;
+import kro13.cosmith.data.types.components.TRenderComponent;
 
 using kro13.cosmith.data.utils.StructureCombiner;
 
@@ -18,12 +22,13 @@ class GameDataFactory
 
 	public function newMap(width:Int, height:Int):TGameMap
 	{
-		var map:TGameMap = cast newGameObject(-1);
-		map.w = width;
-		map.h = height;
-		map.image = MAP_IMG;
-		map.objects = [];
-		map.name = "Map";
+		var map:TGameMap =
+			{
+				render: newRenderComponent(MAP_IMG),
+				objects: []
+			}
+		map.render.w = width;
+		map.render.h = height;
 		return map;
 	}
 
@@ -33,14 +38,10 @@ class GameDataFactory
 			{
 				id: id,
 				type: type,
-				image: GO_STUB_IMG,
-				x: 0,
-				y: 0,
-				w: 0,
-				h: 0,
-				name: ""
+				name: "",
+				components: []
 			};
-
+		template.components.push(newRenderComponent(GO_STUB_IMG));
 		return switch (type)
 		{
 			case PAWN:
@@ -54,25 +55,49 @@ class GameDataFactory
 		}
 	}
 
-	private function setupPawn(tmpl:TGameObject):TGameObject
+	private function setupPawn(tmpl:GameObjectData):TGameObject
 	{
-		tmpl.w = tmpl.h = 5;
+		var render:TRenderComponent = tmpl.getComponent(RENDER);
+		render.w = render.h = 5;
 		tmpl.name = 'Pawn${tmpl.id}';
 		return tmpl;
 	}
 
-	private function setupNPC(tmpl:TGameObject):TGameObject
+	private function setupNPC(tmpl:GameObjectData):TGameObject
 	{
-		tmpl.w = tmpl.h = 2;
+		var render:TRenderComponent = tmpl.getComponent(RENDER);
+		render.w = render.h = 2;
 		tmpl.name = 'NPC${tmpl.id}';
 		return tmpl;
 	}
 
-	private function setupHero(tmpl:TGameObject):THero
+	private function setupHero(tmpl:GameObjectData):TGameObject
 	{
-		tmpl.w = tmpl.h = 3;
+		var render:TRenderComponent = tmpl.getComponent(RENDER);
+		render.w = render.h = 3;
 		tmpl.name = 'Hero${tmpl.id}';
-		return tmpl.combine({userId: ""});
+		tmpl.components.push(newOwnerComponent());
+		return tmpl;
+	}
+
+	private function newOwnerComponent(userId:String = ""):TOwnerComponent
+	{
+		return {
+			type: OWNER,
+			userId: userId
+		};
+	}
+
+	private function newRenderComponent(image:String = GO_STUB_IMG):TRenderComponent
+	{
+		return {
+			type: RENDER,
+			image: image,
+			x: 0,
+			y: 0,
+			h: 0,
+			w: 0
+		};
 	}
 
 	private static function get_instance():GameDataFactory

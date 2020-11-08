@@ -10,11 +10,13 @@ import kro13.cosmith.client.board.utils.TouchMapDrag;
 import kro13.cosmith.client.board.utils.TouchMapZoom;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.scopes.MapData;
+import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
+import kro13.cosmith.data.types.components.TRenderComponent;
 import openfl.events.MouseEvent;
 import openfl.ui.Multitouch;
 
-class GameMap extends GameObject
+class GameMap extends GameSprite
 {
 	private var grid:MapGrid;
 	private var idsToInstances:Map<Int, GameObject>;
@@ -22,16 +24,18 @@ class GameMap extends GameObject
 	private var selectedObj:GameObject;
 	private var drag:IMapDrag;
 	private var zoom:IMapZoom;
+	private var data:TGameMap;
 
-	public function new(data:TGameObject)
+	public function new(data:TGameMap)
 	{
-		super(data);
+		this.data = data;
+		super(data.render);
 		grid = new MapGrid();
 		idsToInstances = new Map();
 		idsToInstancesKeys = [];
 	}
 
-	override public function start()
+	override public function start():Void
 	{
 		super.start();
 		addChild(grid);
@@ -159,8 +163,9 @@ class GameMap extends GameObject
 
 	private function moveSelectedObject(tilesX:Int, tilesY:Int):Void
 	{
-		selectedObj.data.x = tilesX;
-		selectedObj.data.y = tilesY;
+		var objRender:TRenderComponent = selectedObj.data.getComponent(RENDER);
+		objRender.x = tilesX;
+		objRender.y = tilesY;
 		selectedObj.handleInteraction(MOVE(tilesX, tilesY));
 	}
 

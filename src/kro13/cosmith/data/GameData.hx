@@ -1,9 +1,11 @@
 package kro13.cosmith.data;
 
+import kro13.cosmith.data.scopes.GameObjectData;
 import kro13.cosmith.data.scopes.MapData;
 import kro13.cosmith.data.types.ECommand;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
+import kro13.cosmith.data.types.components.TRenderComponent;
 
 class GameData
 {
@@ -28,9 +30,12 @@ class GameData
 				map.addObject(data);
 
 			case MOVE(id, x, y):
-				var data:TGameObject = map.getObjectById(id);
-				data.x = x;
-				data.y = y;
+				var data:GameObjectData = map.getObjectById(id);
+				var render:TRenderComponent = data.getComponent(RENDER);
+				render.x = x;
+				render.y = y;
+
+			case NONE:
 
 			default:
 				trace('No handler for ${command}');

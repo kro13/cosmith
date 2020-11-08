@@ -8,13 +8,17 @@ import js.node.socketio.Server;
 import js.node.socketio.Socket;
 import kro13.cosmith.data.GameData;
 import kro13.cosmith.data.GameDataFactory;
+import kro13.cosmith.data.scopes.GameObjectData;
 import kro13.cosmith.data.types.ECommand;
 import kro13.cosmith.data.types.TGameMap;
 import kro13.cosmith.data.types.TGameObject;
 import kro13.cosmith.data.types.TMessage;
+import kro13.cosmith.data.types.components.TOwnerComponent;
+import kro13.cosmith.data.types.components.TRenderComponent;
 import kro13.cosmith.server.middleware.CORS;
 import kro13.cosmith.server.middleware.Log;
 import tink.CoreApi.Future;
+import tink.Stringly;
 import tink.http.Handler;
 import tink.http.Response.OutgoingResponse;
 import tink.http.containers.NodeContainer;
@@ -44,14 +48,13 @@ class CosmithServer
 		var factory:GameDataFactory = GameDataFactory.instance;
 		GameData.instance.init(factory.newMap(100, 100));
 		// some mock data
-		var npc1:TGameObject = factory.newGameObject(Storage.goIds++, NPC);
-		npc1.x = 20;
-		npc1.y = 10;
+		var npc1:GameObjectData = factory.newGameObject(Storage.goIds++, NPC);
+		npc1.setPosition(20, 10);
 		GameData.instance.map.addObject(npc1);
-		var npc2:TGameObject = factory.newGameObject(Storage.goIds++, NPC);
-		npc2.x = 10;
-		npc2.y = 20;
+		var npc2:GameObjectData = factory.newGameObject(Storage.goIds++, NPC);
+		npc2.setPosition(10, 20);
 		GameData.instance.map.addObject(npc2);
+		// GameData.instance.map.printObjects();
 	}
 
 	private static function initMessenger(socketServer:SocketServer, nodeServer:NodeServer):Void
@@ -127,34 +130,33 @@ class Root
 	// @:header("Access-Control-Allow-Origin", "*")
 
 	@:get('/loadMap')
-	public function loadMap():TGameMap
+	public function loadMap():String
 	{
-		trace("Load map");
-		return GameData.instance.map.data;
+		return Json.stringify(GameData.instance.map.data);
 	}
 
 	// @:header("Access-Control-Allow-Origin", "*")
 
 	@:post('/spawnHero')
-	public function spawnHero(body:{userId:String, name:String}):TStatus
+	public function spawnHero(body:{userId:String, name:String}):String
 	{
 		if (GameData.instance.map.getHeroByUserId(body.userId) == null)
 		{
-			trace('Spawn hero ${body.name}');
-			var hero:THero = cast GameDataFactory.instance.newGameObject(Storage.goIds++, HERO);
-			hero.userId = body.userId;
+			var hero:GameObjectData = GameDataFactory.instance.newGameObject(Storage.goIds++, HERO);
+			var owner:TOwnerComponent = hero.getComponent(OWNER);
+			owner.userId = body.userId;
+			var render:TRenderComponent = hero.getComponent(RENDER);
+			hero.setPosition(Math.round(Math.random() * 30), Math.round(Math.random() * 30));
 			hero.name = body.name;
-			hero.x = Math.round(Math.random() * 30);
-			hero.y = Math.round(Math.random() * 30);
 			var spawnCmd:ECommand = SPAWN(hero);
 			GameData.instance.process(spawnCmd);
 			socketServer.sockets.emit("message",
 				{
-					text: 'Spawn hero ${hero.name} at (${hero.x} ${hero.y})',
+					text: 'Spawn hero ${hero.name} at (${render.x} ${render.y})',
 					type: COMMAND(spawnCmd)
 				});
 		}
-		return {status: "OK"};
+		return Json.stringify({status: "OK"});
 	}
 }
 
