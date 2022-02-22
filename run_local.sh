@@ -1,0 +1,1 @@
+haxelib run lime test html5 -v -D react_global -D react_ver=16.3 -D react_ref_api -debug -D local_server
