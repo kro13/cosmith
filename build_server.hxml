@@ -4,4 +4,5 @@
 -lib hxnodejs
 -lib hxsocketio
 -js bin/cosmith-server/server.js
+#-D no-deprecation-warnings
 -main kro13.cosmith.server.CosmithServer

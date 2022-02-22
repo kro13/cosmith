@@ -20,10 +20,14 @@ class CORS implements IMiddleware
 		{
 			var origin:String = req.header.get(ORIGIN)[0];
 			var headers:Array<HeaderField> = [];
-			if (config.allowOrigin.indexOf(origin) >= 0)
+			if (config.allowOrigin.length > 0 && config.allowOrigin.indexOf(origin) >= 0)
 			{
 				headers.push(new HeaderField(ACCESS_CONTROL_ALLOW_ORIGIN, origin));
+			} else
+			{
+				headers.push(new HeaderField(ACCESS_CONTROL_ALLOW_ORIGIN, "*"));
 			}
+
 			return handler.process(req).map((res) ->
 			{
 				return new OutgoingResponse(res.header.concat(headers), res.body);

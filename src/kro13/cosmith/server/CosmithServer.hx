@@ -97,7 +97,8 @@ class CosmithServer
 		var log:Log = new Log();
 		var cors:CORS = new CORS(
 			{
-				allowOrigin: ["http://127.0.0.1:3000", "https://v6p9d9t4.ssl.hwcdn.net"]
+				allowOrigin: []
+				// allowOrigin: ["http://127.0.0.1:3000", "https://v6p9d9t4.ssl.hwcdn.net"]
 			});
 		// handler = log.apply(handler);
 		handler = cors.apply(handler);
